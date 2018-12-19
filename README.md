@@ -11,3 +11,19 @@ To move the sprite use the arrow keys:
 - down arrow key to move backwards
 - right arrow key to move to the right
 - left arrow key to move to the left
+
+The scoreboard will keep track of the number of moves made and also the number of crashes.  
+
+Once the sprite gets over the wall without getting hit, the player is displayed a pop-up window congratulating the user.  The user then has the option of closing the pop-up and/or playing again. At which point the player is moved back to the starting position and the scoreboard is set to zeros.  The player also has the option of reseting the game anytime he/she wishes. 
+
+
+**Giving credit to the following sites and developers:**
+1. Sound effects added when the sprite moves, when there is a crash and when the sprite makes it to the water area and wins.  The sounds were provided by https://www.noiseforfun.com/. 
+
+2.  The green checkmark to congratulate the user, which appears in the popup window was created by: 
+
+  Ghost Check Mark & Close Icon Animation
+  https://codemyui.com/ghost-check-mark-close-icon-animation/
+
+  Pure CSS animation for checkmark and a close icon designed by
+  Lee Porter: https://twitter.com/lee3porter
