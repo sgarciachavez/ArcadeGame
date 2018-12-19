@@ -67,3 +67,8 @@ body, header {
   font-size: 1em;
   cursor: pointer;
 }
+.reset__button {
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}

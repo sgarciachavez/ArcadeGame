@@ -27,7 +27,7 @@ Enemy.prototype.update = function(dt) {
     var dx = player.x - this.x;
     var dy = player.y - this.y;
     var distance = Math.sqrt((dx * dx) + (dy * dy));
-    if(distance < 75 && player.y > -5){
+    if(distance < 75 && player.y > -5){ //a CRASH has occured!!!
       //reset Player
       player.x = 200;
       player.y = 400;
@@ -53,6 +53,11 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+/**
+ * @description class Player
+ * @param {constructor} sprite, x, y
+ * This Player object can be moved and detect when it was won by getting across to the other side
+ */
 class Player{
   constructor(sprite, x, y){
     this.x = x;
@@ -95,10 +100,12 @@ class Player{
     if(keyCode === "left"){
       this.move("x", this.x - 15);  //decrease the x value
     }
-
+    //We have a WINNER!
     if(this.y === -5 && this.iswinner === false){
        this.iswinner = true;
        this.won.play();
+       endMoves.textContent = counter.moves;
+       endCrashes.textContent = counter.crashes;
        popup.classList.toggle("hide", false);
     }
   }
@@ -106,7 +113,11 @@ class Player{
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 }
-
+/**
+ * @description class Counter
+ * @param {constructor} moves, crashes
+ * This Counter object contains the counts for moves and crashes. This object has getters and setters and also methods to increament the count.
+ */
 class Counter{
   constructor(moves, crashes){
     this._moves = moves;
@@ -138,8 +149,6 @@ class Counter{
 // Place the player object in a variable called player
 let player = new Player('images/char-horn-girl.png', 200, 400); //starting values center
 let counter = new Counter(0,0);
-//counter.addMove();
-//console.log(counter.moves);
 
 let allEnemies = [];
 for(let i = 0; i < 3; i++){
@@ -161,8 +170,12 @@ const wins = document.getElementById("wins");
 const moves = document.getElementById("moves");
 const crashes = document.getElementById("crashes");
 const popup = document.getElementById("popup");
+const endMoves = document.getElementById("end_moves");
+const endCrashes = document.getElementById("end_crashes");
+const resetButton = document.getElementById("reset_button");
 
 popup.addEventListener("click", actionPopup);
+resetButton.addEventListener("click", resetGame);
 
 function actionPopup(evt) {
   let id = evt.target.id;
