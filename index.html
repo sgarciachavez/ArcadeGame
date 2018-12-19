@@ -4,10 +4,38 @@
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/checkmark.css">
 </head>
 <body>
-    <script src="js/resources.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/engine.js"></script>
+    <header>
+      <h1>Scoreboard</h1>
+      <div class="score-container">
+        <div class="grid-item title">MOVES</div>
+        <div class="grid-item title">CRASHES</div>
+        <div id="moves" class="grid-item score">0</div>
+        <div id="crashes" class="grid-item score">0</div>
+      </div>
+    </header>
+
+    <section id="popup" class="popup page__title hide">
+      <div class="popup__content">
+        <span id="close_window" class="close">&times;</span>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+          <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+          <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+        </svg>
+        <h2>Congratulations! <br> You made it across!</h2>
+        <p>
+          With <span id="end_moves"></span> moves and <span id="end_crashes"></span> crashes.
+        </p>
+        <p><button id="play_again" class="button">Play Again!</button></p>
+      </div>
+    </section>
+
+  <script src="js/resources.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/engine.js"></script>
+
+  <footer><p>Sound effects provided by <a href="https://www.noiseforfun.com">NoiseForFun.com</a></p></footer>
 </body>
 </html>

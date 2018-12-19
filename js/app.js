@@ -1,3 +1,4 @@
+//
 // Enemies our player must avoid
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
@@ -9,6 +10,7 @@ var Enemy = function(x,y,speed) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/enemy-bug.png';
+    this.crash = new sound('sound/NFF-wrong-move.wav');
 };
 
 // Update the enemy's position, required method for game
@@ -29,15 +31,17 @@ Enemy.prototype.update = function(dt) {
       //reset Player
       player.x = 200;
       player.y = 400;
+      this.crash.play();
+      counter.addCrash();
+      crashes.textContent = counter.crashes;
     }
 };
 
 Enemy.prototype.reset = function(){
-  //Maybe change the speed as well.
   if(this.x > 501){
     this.x = -100;
     //Assign new speed
-    this.speed = Math.floor((Math.random() * 300) + 10);
+    this.speed = Math.floor((Math.random() * 250) + 10);
   }
 }
 
@@ -54,60 +58,95 @@ class Player{
     this.x = x;
     this.y = y;
     this.sprite = sprite;
+    this.won = new sound('sound/NFF-carillon-02-a.wav');
+    this.jump = new sound('sound/NFF-zing.wav');
+    this.iswinner = false;
   }
+
   //add methods here
   update(){
 
   }
+  move(i, value){
+    if(value > -20 && value < 420){
+      if(i === "x"){
+        this.x = value;
+      }else{
+        this.y = value;
+      }
+      this.jump.play();
+      counter.addMove();
+      moves.textContent = counter.moves;
+    }
+  }
+
   handleInput(keyCode){
 
     if(keyCode === "up"){
-      //decrease the y value
-      let newy = this.y - 15;
-      if(newy > -15){
-        this.y = newy;
-      }
+      this.move("y", this.y - 15);  //decrease the y value
     }
     if(keyCode === "down"){
-      //increase the y value
-      let newy = this.y + 15;
-      if(newy < 450){
-        this.y = newy;
-      }
+      this.move("y", this.y + 15);  //increase the y value
     }
 
     if(keyCode === "right"){
-      //increase the x value
-      let newx = this.x + 15;
-      if(newx < 420){
-        this.x = newx;
-      }
+      this.move("x", this.x + 15); //increase the x value
     }
     if(keyCode === "left"){
-      //decrease the x value
-      let newx = this.x - 15;
-      if(newx > -20){
-        this.x = newx;
-      }
+      this.move("x", this.x - 15);  //decrease the x value
     }
 
+    if(this.y === -5 && this.iswinner === false){
+       this.iswinner = true;
+       this.won.play();
+       popup.classList.toggle("hide", false);
+    }
   }
   render(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 }
 
+class Counter{
+  constructor(moves, crashes){
+    this._moves = moves;
+    this._crashes = crashes;
+  }
+
+  addMove(){
+    this._moves = this._moves + 1;
+  }
+  set moves(m){
+    this._moves = m;
+  }
+  get moves(){
+    return this._moves;
+  }
+  ///////////////////////
+  addCrash(){
+    this._crashes = this._crashes + 1;
+  }
+  set crashes(c){
+    this._crashes = c;
+  }
+  get crashes(){
+    return this._crashes;
+  }
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 let player = new Player('images/char-horn-girl.png', 200, 400); //starting values center
+let counter = new Counter(0,0);
+//counter.addMove();
+//console.log(counter.moves);
 
 let allEnemies = [];
 for(let i = 0; i < 3; i++){
   for(let j = 0; j < 3; j++){
     let y = (j === 0) ? 63 : (j === 1) ? 145 : 230; //row1=63, row2=145, row3=230
     let x = Math.floor((Math.random() * 502) + -100); // x value between -100 : 502
-    let speed =  Math.floor((Math.random() * 300) + 10); //speed between 10 : 300
+    let speed =  Math.floor((Math.random() * 250) + 10); //speed between 10 : 300
     allEnemies.push(new Enemy(x, y, speed));
   }
 }
@@ -118,6 +157,33 @@ setInterval(function(){
   }
 }, 2000);
 
+const wins = document.getElementById("wins");
+const moves = document.getElementById("moves");
+const crashes = document.getElementById("crashes");
+const popup = document.getElementById("popup");
+
+popup.addEventListener("click", actionPopup);
+
+function actionPopup(evt) {
+  let id = evt.target.id;
+  if (id === "close_window") {
+    popup.classList.toggle("hide", true);
+  } else if (id === "play_again") {
+    //reset the player & Zero out the scroreboard
+    resetGame();
+    popup.classList.toggle("hide", true);
+  }
+}
+
+function resetGame(){
+  player.x = 200;
+  player.y = 400;
+  player.iswinner = false;
+  counter.moves = 0;
+  counter.crashes = 0;
+  moves.textContent = counter.moves;
+  crashes.textContent = counter.crashes;
+}
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -130,3 +196,18 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
+};
